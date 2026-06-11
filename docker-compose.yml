@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Layer Database
+  db:
+    image: mysql:8.0
+    container_name: wp_db_fur
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend-net # DB hanya terhubung ke backend
+
+  # Layer Aplikasi
+  wordpress:
+    image: wordpress:latest
+    container_name: wp_app
+    restart: unless-stopped
+    ports:
+      - "8080:80" # Akses web di http://localhost:8080
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - frontend-net # Terhubung ke internet/user
+      - backend-net  # Terhubung ke database
+    depends_on:
+      - db # Memastikan DB menyala lebih dulu sebelum WordPress
+
+# Konfigurasi Network
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
+
+# Konfigurasi Volume
+volumes:
+  db_data:
+  wp_data:
