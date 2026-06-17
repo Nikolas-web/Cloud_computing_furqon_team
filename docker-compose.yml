@@ -1,7 +1,9 @@
 version: '3.8'
 
 services:
-  # Layer Database
+  # -------------------------------------------------------------------
+  # 1. DATABASE LAYER (Aman di dalam Backend)
+  # -------------------------------------------------------------------
   db:
     image: mysql:8.0
     container_name: wp_db_fur
@@ -14,36 +16,82 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     networks:
-      - backend-net # DB hanya terhubung ke backend
+      - backend-net
 
-  # Layer Aplikasi
-  wordpress:
-    image: wordpress:latest
-    container_name: wp_app
+  # -------------------------------------------------------------------
+  # 2. CACHING LAYER (Baru - Minggu 2)
+  # -------------------------------------------------------------------
+  redis:
+    image: redis:alpine
+    container_name: wp_redis_fur
+    restart: unless-stopped
+    networks:
+      - backend-net
+
+  # -------------------------------------------------------------------
+  # 3. OBJECT STORAGE LAYER (Baru - Minggu 2)
+  # -------------------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: wp_minio_fur
     restart: unless-stopped
     ports:
-      - "8080:80" # Akses web di http://localhost:8080
+      - "9000:9000" # Port untuk API (dipakai di WordPress)
+      - "9001:9001" # Port untuk buka Dasbor MinIO di browser
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    # Pakai volume baru agar memori password lama yang error ter-reset
+    volumes:
+      - minio_data_baru:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - frontend-net
+      - backend-net
+
+  # -------------------------------------------------------------------
+  # 4. APPLICATION LAYER (Terhubung ke DB, Redis, dan MinIO)
+  # -------------------------------------------------------------------
+  wordpress:
+    image: wordpress:latest
+    container_name: wp_app_fur
+    restart: unless-stopped
+    ports:
+      - "8080:80"
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: ${MYSQL_USER}
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      # Suntikan otomatis untuk WP Offload Media & Redis (Tanpa buka wp-config.php)
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_REDIS_HOST', 'redis');
+        define('WP_REDIS_PORT', 6379);
+        define('AWS_ACCESS_KEY_ID', 'FURQONACCESSKEY123');
+        define('AWS_SECRET_ACCESS_KEY', 'FurqonSecretKeySuperAman123456789');
     volumes:
       - wp_data:/var/www/html
     networks:
-      - frontend-net # Terhubung ke internet/user
-      - backend-net  # Terhubung ke database
+      - frontend-net
+      - backend-net
     depends_on:
-      - db # Memastikan DB menyala lebih dulu sebelum WordPress
+      - db
+      - redis
 
-# Konfigurasi Network
+# -------------------------------------------------------------------
+# AUTOMATIC NETWORK ISOLATION
+# -------------------------------------------------------------------
 networks:
   frontend-net:
     driver: bridge
   backend-net:
     driver: bridge
 
-# Konfigurasi Volume
+# -------------------------------------------------------------------
+# PERSISTENT STORAGE
+# -------------------------------------------------------------------
 volumes:
   db_data:
   wp_data:
+  minio_data:
+  minio_data_baru: # Volume MinIO yang fresh

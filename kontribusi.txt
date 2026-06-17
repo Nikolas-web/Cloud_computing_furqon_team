@@ -1,2 +1,36 @@
-Furqon :
-Niko   : 
+NAMA KELOMPOK: KELOMPOK FURQON
+MATA KULIAH: CLOUD COMPUTING
+PROGRESS: MINGGU 1 
+1. Nama: Furqon Ihanthoriq
+   NIM: 230403010002
+   Tugas & Kontribusi:
+   * Bikin file 'docker-compose.yml' buat arsitektur utama WordPress dan MySQL.
+   * Setup keamanan database pakai Environment Variables (bikin file '.env' dan '.env.example').
+   * Inisialisasi Git lokal pertama kali dan ngurusin push semua file ke GitHub kelompok.
+
+2. Nama: Nikolas K.S
+   NIM: 230403010026
+   Tugas & Kontribusi:
+   * Setup jaringan Docker ('frontend-net' dan 'backend-net') biar database aman terisolasi.
+   * Setup Docker Volumes ('db_data' dan 'wp_data') biar data web ga hilang pas container dimatikan.
+   * Test jalanin 'docker-compose up', nyelesaiin instalasi WordPress di browser, dan ngambil screenshot buat bukti laporan.
+
+
+
+
+PROGRESS: MINGGU 2 (Optimasi Performa & Object Storage)
+1. Nama: Furqon Ihanthoriq
+   NIM: 230403010002
+   Tugas & Kontribusi (Eksekutor Utama Minggu 2):
+   * Merombak total struktur 'docker-compose.yml' dengan menambahkan layer Redis (Cache) dan MinIO (Object Storage).
+   * Melakukan troubleshooting dan bypass Access Policy MinIO menggunakan command line Docker (MinIO Client/mc) agar bucket 'wordpress-media-furqon' menjadi Public (Read-Only).
+   * Menyuntikkan kredensial rahasia (Access Key & Secret Key) secara otomatis menggunakan environment variables.
+   * Melakukan riset dan problem-solving terkait error koneksi S3 dengan beralih ke plugin Media Cloud serta mengonfigurasi fitur 'Force Path Style Endpoint'.
+   * Mengonfigurasi Redis Object Cache di dalam WordPress hingga mendapatkan ping/koneksi yang stabil.
+   * Melakukan git commit dan push seluruh pembaruan arsitektur ke repository GitHub kelompok.
+
+2. Nama: Nikolas K.S
+   NIM: 230403010026
+   Tugas & Kontribusi:
+   * Melakukan pengujian akhir (testing QA) dengan mengunggah gambar di WordPress untuk memverifikasi apakah media ter-offload dengan benar ke MinIO.
+   * Mendokumentasikan hasil eksekusi dengan mengambil screenshot dasbor Redis (traffic cache) dan bucket MinIO untuk keperluan pelaporan mingguan.
