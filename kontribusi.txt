@@ -15,9 +15,6 @@ PROGRESS: MINGGU 1
    * Setup Docker Volumes ('db_data' dan 'wp_data') biar data web ga hilang pas container dimatikan.
    * Test jalanin 'docker-compose up', nyelesaiin instalasi WordPress di browser, dan ngambil screenshot buat bukti laporan.
 
-
-
-
 PROGRESS: MINGGU 2 (Optimasi Performa & Object Storage)
 1. Nama: Furqon Ihanthoriq
    NIM: 230403010002
@@ -34,3 +31,17 @@ PROGRESS: MINGGU 2 (Optimasi Performa & Object Storage)
    Tugas & Kontribusi:
    * Melakukan pengujian akhir (testing QA) dengan mengunggah gambar di WordPress untuk memverifikasi apakah media ter-offload dengan benar ke MinIO.
    * Mendokumentasikan hasil eksekusi dengan mengambil screenshot dasbor Redis (traffic cache) dan bucket MinIO untuk keperluan pelaporan mingguan.
+
+PROGRESS: MINGGU 3 (Penerapan Keamanan & Best Practices)
+1. Nama: Furqon Ihanthoriq
+   NIM: 230403010002
+   Tugas & Kontribusi:
+   * Merapikan file 'docker-compose.yml' dengan menghapus semua password dan kunci rahasia (API keys) yang tadinya masih tertulis langsung (hardcode).
+   * Mengubah pengaturan WordPress agar otomatis mengambil kunci akses MinIO dari file '.env' biar lebih aman sesuai Best Practices.
+   * Melakukan restart container Docker dan ngetes ulang koneksi WordPress ke Object Storage buat mastiin semuanya tetap berjalan normal setelah file dirapikan.
+
+2. Nama: Nikolas K.S
+   NIM: 230403010026
+   Tugas & Kontribusi:
+   * Mengecek ulang repositori GitHub kelompok untuk memastikan file '.env' yang berisi password benar-benar aman dan tidak ikut ter-upload ke publik.
+   * Menyusun dokumentasi dan merapikan pembaruan portofolio untuk laporan progres Minggu 3.
